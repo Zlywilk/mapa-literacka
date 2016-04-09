@@ -1,0 +1,55 @@
+function deletemarker(formclose){
+
+$.each(formclose, function(key){
+        var iloscpaneli=$(formclose).length,
+            panelid=this.id;
+       { if(panelid==="0")
+            {
+                              $(this).find('input, textarea').val('');
+ $(this).find('input[type="checkbox"]').prop("checked", false);
+                
+            }else{
+                 formclose[panelid].remove();
+            }
+         markersadd[panelid].setMap(null);
+       }
+})
+}
+
+  function deletemarker(index){
+    var  formclose=$('.panelholding');
+if($('.panelholding').length===1){
+              $('input, textarea').val('');
+ $('input[type="checkbox"]').prop("checked", false);
+    if(markersadd.length===1)
+         markersadd[index].setMap(null);
+      markersadd.splice(index);
+    labelIndex=0;
+    return;
+}  
+
+                 formclose[index].remove();
+    
+       
+      markersadd[index].setMap(null);
+      markersadd.splice(index);
+       var iloscpaneli=$('.panelholding').length;
+for(i=index;i<iloscpaneli;i++){
+formclose[i].attr("id",i-1);
+}
+  }
+
+
+    $create = new markers;
+       $create->title = $input ['title'][$i];
+       $create->addres = $input ['addres'][$i]; 
+       $create->opis = $input ['opis'][$i]; 
+       $create->type = $input ['type'][$i]; 
+       $create->latitude = $input ['latitude'][$i]; 
+       $create->longitude = $input ['longitude'][$i]; 
+       $create->repair = $input ['repair'][$i]; 
+       $create->allow = '1'; 
+       $create->user_id = $userid;
+                   $create->created_at = Carbon::now()->format('Y-m-d');
+       $create->updated_at = Carbon::now()->format('Y-m-d');
+        $create->save();
