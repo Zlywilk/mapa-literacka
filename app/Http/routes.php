@@ -14,7 +14,7 @@
     
 
 Route::get('/legend', 'categoryController@index');
-Route::get('markerinfo/{id}', 'MakerController@show');
+Route::get('markers/{id}', 'MakerController@show');
 Route::get('category/{kmesage}/{id}', 'MakerController@category');
 
 /*
