@@ -44,9 +44,8 @@
 
         <div id="0" class="panelholding addnewmarker">
         <div class="panel panel-default">
-  <div class="panel-heading">marker<span class="pull-right clickable"><i class="fa fa-times"></i></span></div>
+  <div class="panel-heading">marker<span class="pull-right cancel clickable"><i class="fa fa-times"></i></span></div>
   <div class="panel-body">
-        
           
             <div class="form-group">
                 <div class="error0 alert alert-danger" role="alert" ></div>
