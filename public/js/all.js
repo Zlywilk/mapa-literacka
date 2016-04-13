@@ -28,9 +28,9 @@ function init() {
         },
         markersadd = [],
         lastmarkerid = null,
-        panelname = '<span class="pull-right clickable"><i class="fa fa-times"></i></span>';
+        panelname = '<span class="pull-right cancel clickable"><i class="fa fa-times"></i></span>';
 
-    function lastid(lastmarkerid) {
+    function lastid(lid) {
         var i = 0,
             opis, repair, pozycja, markertitle, markerid, type, image, typ, userid, markerimage, addres, bazamarkerow;
         $.get('lastid/' + lastmarkerid, function (data, status) {
@@ -168,28 +168,28 @@ function init() {
     function sendajax(formdata, method) {
         if (arguments[2] !== undefined)
             var agr = arguments[2];
-        $.ajax({
+          $.ajax({
             type: method,
             url: 'markers',
             contentType: 'aplication/json',
             data: formdata,
             success: function (data) {
                 if (method === "POST")
-                    $('.globalmesage').addClass('alert-success').html('melduje wykonanie zadania markery zostały dodane').fadeIn();
+                    $('.globalmesage').addClass('alert-success').append('melduje wykonanie zadania markery zostały dodane').fadeIn();
                 if (method === "DELETE")
-                    $('.globalmesage').addClass('alert-success').html('Bomba usunąłem marker ale już go nie odzyskasz :D').fadeIn();
+                    $('.globalmesage').addClass('alert-success').append('Bomba usunąłem marker ale już go nie odzyskasz :D').fadeIn();
                 if (method === "PATCH")
-                    $('.globalmesage').addClass('alert-success').html('exh znów coś chcesz? <br> No nic musze to zrobić w końcu jestem programaem gotowe markery edytowane').fadeIn();
-                if (agr !== undefined) {
-                    if(agr !=="a")
-          {          deletemarker(agr);
-                    lastid(lastmarkerid);}
-                } else {
-                    deletemarker("all");
+                    $('.globalmesage').addClass('alert-success').append('exh znów coś chcesz? <br> No nic musze to zrobić w końcu jestem programaem gotowe markery edytowane').fadeIn();
+                  if (agr !== undefined) {
+                    deletemarker(agr);
                     lastid(lastmarkerid);
+                } else {
+                     if(method!=="PATCH")
+                   { deletemarker("all");
+                    lastid(lastmarkerid);}
                 }
             }
-        }).error(function (data) {
+        }).fail(function (data) {
             if (data.status === 500) {
                 $('.globalmesage').addClass('alert-danger').html('coś poszło nie tak nasze minionki juz pracują nad rozwizaniem problemu :)').fadeIn();
                 return;
@@ -384,7 +384,7 @@ function init() {
         $('body').on('click', '.clickable', function (e) {
             var formclose = $(this).closest('.panelholding'),
                 formcloseid = formclose.attr('id'),
-                formallcalue = $('.panelholding');
+                formallcalue = $('.addnewmarker');
             e.preventDefault();
             if ($(this).hasClass('cancel')) {
                 deletemarker(formcloseid);
@@ -407,13 +407,8 @@ function init() {
                         if (countofedit> 0) {
                     var datafromedit=$('.edit').next();
                     var datatojson = JSON.stringify(datafromedit.serializeObject());
-                            if(countofedit===formallcalue.length)
-                    {
-                        sendajax(datatojson, 'PATCH');
-                    }
-                            else{
-                                sendajax(datatojson, 'PATCH','a');
-                            }
+                    sendajax(datatojson, 'PATCH',formcloseid);
+
                 }
             } else if ($(this).hasClass('editsend')) {
                 var $markerid = $(this).closest('.panel-body').find('.editid').val();
@@ -460,6 +455,7 @@ function init() {
     theMap.controls[google.maps.ControlPosition.TOP_LEFT].push();
 }
 google.maps.event.addDomListener(window, 'load', init);
+
 /*!
 	Colorbox 1.6.3
 	license: MIT
