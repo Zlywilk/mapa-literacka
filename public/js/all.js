@@ -92,18 +92,16 @@ function init() {
                 var editid = $('.panelholding').length;
                 bazamarkerow.setDraggable(true);
                 var counteditwindows = $('.edit').length;
-                if (counteditwindows > 0) {
-                    var e = 0;
+                if (counteditwindows >= 1) {
+                var e = 0;
+                    var i=0;
                     for (e; counteditwindows >= e; e++) {
-                        if ($('.editid').eq(e).val() !== bazamarkerow.id.toString()) {
-                            if (e === counteditwindows)
-                                bazamarkerow.editid = editid;
-                            edit(bazamarkerow);
-                        } else {
-                            return;
+                        if ($('.editid').eq(e).val() === bazamarkerow.id.toString()) {
+                         ++i;
                         }
-
-                    }
+                    if(i===0){
+                        edit(bazamarkerow);
+                    }}
                 } else {
                     {
                         bazamarkerow.editid = editid;
@@ -212,18 +210,38 @@ function init() {
     function restoreerror($form) {
         var iloscokien = $('.panelholding').length;
         $('.panelholding:last').attr('id', iloscokien-1);
+         $form.find('.deltable').val('');
+            $form.find('input[type="checkbox"]').prop('checked', false);
+            $form.find('.repair').val('0');
         $form.find('.alert-danger').hide();
         $form.find('.alert-danger').empty();
         $form.find('.alert-danger').attr('class', 'error' + iloscokien + ' alert alert-danger');
     }
 
     function edit($marker) {
+if($('.latitude').val()==="")
+    {$('.panelholding').removeClass('addnewmarker');
+     $('.panel-heading').addClass('edit').html($marker.title + panelname);
+    $('.panel-body').find('.btn-group').append('<button type="button" data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
+    $('.panel-body').find('.form-group').append('<input class="form-control editid" name="editid"   type="hidden" >');
+                $('.panel-body').find('.title').val($marker.title);
+        $('.panel-body').find('.addres').val($marker.addres);
+        $('.panel-body').find('.opis').val($marker.opis);
+        $('.panel-body').find('.editid').val($marker.id);
+        $('.panel-body').find('.send').removeClass('send').addClass('editsend');
+        $('.panel-body').find('.type').val($marker.type);
+        $('.panel-body').find('.repair').val($marker.repair);
+        $('.panel-body').find('.latitude').val($marker.position.lat());
+        $('.panel-body').find('.longitude').val($marker.position.lng());
 
-        var editmenu = $('.panelholding:first').clone();
+    }else
+{        var editmenu = $('.panelholding:first').clone();
+ if(editmenu.hasClass('addnewmarker')){
+             editmenu.find('.btn-group').append('<button type="button" data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
+        editmenu.find('.form-group').append('<input class="form-control editid" name="editid"   type="hidden" >');
+ }
          editmenu.removeClass('addnewmarker');
         editmenu.find('.panel-heading').addClass('edit').html($marker.title + panelname);
-        editmenu.find('.btn-group').append('<button type="button" data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
-        editmenu.find('.form-group').append('<input class="form-control editid" name="editid"   type="hidden" >');
 
         editmenu.find('.title').val($marker.title);
         editmenu.find('.addres').val($marker.addres);
@@ -235,7 +253,7 @@ function init() {
         editmenu.find('.latitude').val($marker.position.lat());
         editmenu.find('.longitude').val($marker.position.lng());
         $('.all').before(editmenu);
-        restoreerror(editmenu);
+        restoreerror(editmenu);}
         $('body').on('click', '.destroy', function (e) {
             e.preventDefault();
             var $markerid = $(this).closest('.panel-body').find('.editid').val();
@@ -333,15 +351,18 @@ function init() {
 
     function addMarker(location, map) {
         var iloscmarkerow = markersadd.length,
+            iloscokienmarkrów = $('.addnewmarker').length,
+            iloscokien = $('.panelholding').length,
+            markeraddmenu=$('.panelholding:first').clone(),
             marker = new google.maps.Marker({
-                id: iloscmarkerow,
+                id: iloscokien,
                 position: location,
                 label: labels[labelIndex++ % labels.length],
                 map: map,
                 draggable: true
             });
 
-        getgeo(location, 0, iloscmarkerow);
+
 
         markersadd.push(marker);
         theMap.setCenter(location);
@@ -350,17 +371,22 @@ function init() {
             getgeo(event.latLng, 0, id);
         });
 
-        var iloscokien = $('.panelholding').length;
-        $('#sidebar-wrapper').removeClass('hide');
-        if (iloscmarkerow >= 1) {
-            var markeraddmenu = $('.panelholding:first').clone();
-            markeraddmenu.find('.panel-heading').html('marker' + panelname);
-            restoreerror(markeraddmenu);
-            markeraddmenu.find('.deltable').val('');
-            markeraddmenu.find('input[type="checkbox"]').prop('checked', false);
-            markeraddmenu.find('.repair').val('0');
-            $('.all').before(markeraddmenu);
-        }
+
+        if (iloscokienmarkrów >= 0) {
+            if(markeraddmenu.find('.panel-heading:first').hasClass('edit')){
+                markeraddmenu.addClass('addnewmarker');
+                markeraddmenu.find('.edit').removeClass('edit');
+                markeraddmenu.find('.destroy').remove();
+                 markeraddmenu.find('.editsend').attr('class','btn btn-sm btn-default clickable send');
+                           markeraddmenu.find('.panel-heading').html('marker' + panelname);
+                $('.editid').remove();
+            }
+               $('.all').before(markeraddmenu);
+                getgeo(location, 0, iloscokien);
+                 restoreerror(markeraddmenu);
+            }
+
+
     }
     if ($('.city').html() === 'Idź do UL.') {
         $('body').on('change', '.required', function () {
