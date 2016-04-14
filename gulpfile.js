@@ -12,8 +12,7 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
-        mix.styles('map.min.css');
-      mix.styles('colorbox.css');
+        mix.styles(['map.min.css','colorbox.css']);
         mix.scripts([
         'map.js','jquery.colorbox-min.js'
     ]);
