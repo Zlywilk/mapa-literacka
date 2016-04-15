@@ -10,12 +10,13 @@ var elixir = require('laravel-elixir');
  | file for our application, as well as publishing vendor resources.
  |
  */
+require('laravel-elixir-imagemin');
 
 elixir(function(mix) {
         mix.styles(['map.min.css','colorbox.css']);
         mix.scripts([
         'map.js','jquery.colorbox-min.js'
-    ]);
-
+    ]).version(['css/all.css','js/all.js']);
+ mix.imagemin();
 
 });
