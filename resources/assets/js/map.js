@@ -207,15 +207,16 @@ function init() {
         });
     }
 
-    function restoreerror($form) {
-        var iloscokien = $('.panelholding').length;
-        $('.panelholding:last').attr('id', iloscokien-1);
-         $form.find('.deltable').val('');
+    function restoreerror($form,$isEdit) {
+        var iloscokien = $('.panelholding').length - 1;
+        $('.panelholding:last').attr('id', iloscokien);
+        if($isEdit==="1")
+ {        $form.find('.deltable').val('');
             $form.find('input[type="checkbox"]').prop('checked', false);
             $form.find('.repair').val('0');
         $form.find('.alert-danger').hide();
         $form.find('.alert-danger').empty();
-        $form.find('.alert-danger').attr('class', 'error' + iloscokien + ' alert alert-danger');
+        $form.find('.alert-danger').attr('class', 'error' + iloscokien + ' alert alert-danger');}
     }
 
     function edit($marker) {
@@ -239,8 +240,9 @@ if($('.latitude').val()==="")
  if(editmenu.hasClass('addnewmarker')){
              editmenu.find('.btn-group').append('<button type="button" data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
         editmenu.find('.form-group').append('<input class="form-control editid" name="editid"   type="hidden" >');
+     editmenu.removeClass('addnewmarker');
  }
-         editmenu.removeClass('addnewmarker');
+
         editmenu.find('.panel-heading').addClass('edit').html($marker.title + panelname);
 
         editmenu.find('.title').val($marker.title);
@@ -253,7 +255,7 @@ if($('.latitude').val()==="")
         editmenu.find('.latitude').val($marker.position.lat());
         editmenu.find('.longitude').val($marker.position.lng());
         $('.all').before(editmenu);
-        restoreerror(editmenu);}
+        restoreerror(editmenu,0);}
         $('body').on('click', '.destroy', function (e) {
             e.preventDefault();
             var $markerid = $(this).closest('.panel-body').find('.editid').val();
@@ -306,7 +308,7 @@ if($('.latitude').val()==="")
         $('.repair').val(0);
         $('.type').val(null);
     }
-
+//TODO: look up to this fuction not sure if work  correctly
     function deletemarker(index) {
         var formclose = $('.panelholding'),
             iloscpaneli = formclose.length;
@@ -337,9 +339,9 @@ if($('.latitude').val()==="")
         }
         $(index).fadeOut();
         formclose[index].remove();
-        if (markersadd.length >= 1)
-            markersadd[index].setMap(null);
-        markersadd.splice(index, 1);
+        if (formclose.eq(index).hasClass('addnewmarker'))
+          {  markersadd[index].setMap(null);
+        markersadd.splice(index, 1);}
         var e = index,
             panelclose = $('.panelholding'),
             countpanels = panelclose.length;
@@ -355,7 +357,7 @@ if($('.latitude').val()==="")
             iloscokien = $('.panelholding').length,
             markeraddmenu=$('.panelholding:first').clone(),
             marker = new google.maps.Marker({
-                id: iloscokien,
+                id: iloscokien-1,
                 position: location,
                 label: labels[labelIndex++ % labels.length],
                 map: map,
@@ -381,10 +383,12 @@ if($('.latitude').val()==="")
                            markeraddmenu.find('.panel-heading').html('marker' + panelname);
                 $('.editid').remove();
             }
-               $('.all').before(markeraddmenu);
-                getgeo(location, 0, iloscokien);
-                 restoreerror(markeraddmenu);
+            if(iloscmarkerow>0||$('.edit').length===1)
+         {      $('.all').before(markeraddmenu);
+                 restoreerror(markeraddmenu,1);}
+
             }
+        getgeo(location, 0,  $('.panelholding').length-1);
 
 
     }
