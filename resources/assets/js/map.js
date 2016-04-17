@@ -1,5 +1,5 @@
 function init() {
-    "use strict";
+    'use strict';
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
         labelIndex = 0,
         geocoder = new google.maps.Geocoder(),
@@ -28,12 +28,13 @@ function init() {
         },
         markersadd = [],
         lastmarkerid = null,
-        panelname = '<span class="pull-right cancel clickable"><i class="fa fa-times"></i></span>';
+        panelname = '<span class="pull-right cancel clickable"><i class="fa fa-times"></i></span>',
+        markerGoPoint;
 
     function lastid(lid) {
         var i = 0,
             opis, repair, pozycja, markertitle, markerid, type, image, typ, userid, markerimage, addres, bazamarkerow;
-        $.get('lastid/' + lastmarkerid, function (data, status) {
+        $.get('lastid/' + lastmarkerid, function(data, status) {
             var datl = data.length;
             for (i; i < datl; i++) {
                 pozycja = new google.maps.LatLng(data[i].latitude, data[i].longitude);
@@ -75,8 +76,8 @@ function init() {
         });
     }
     lastid(lastmarkerid);
-    var bindInfoWindow = function (bazamarkerow, theMap) {
-        google.maps.event.addListener(bazamarkerow, 'click', function () {
+    var bindInfoWindow = function(bazamarkerow, theMap) {
+        google.maps.event.addListener(bazamarkerow, 'click', function() {
             var markercontent = '<h4 style="margin:2px ">' + bazamarkerow.title + '</h4><p style="margin:0px">' + bazamarkerow.opis + '</p>';
             if (bazamarkerow.image !== undefined) {
                 var markerimage = '<img src="' + bazamarkerow.image + '" alt="' + bazamarkerow.title + '">';
@@ -86,22 +87,22 @@ function init() {
                 content: markercontent
             });
             infowindow.open(theMap, bazamarkerow);
-            if ($('#roleid').val() === "2" || $('#userid').val() === bazamarkerow.userid)
+            if ($('#roleid').val() === '2' || $('#userid').val() === bazamarkerow.userid)
 
             {
                 var editid = $('.panelholding').length;
                 bazamarkerow.setDraggable(true);
                 var counteditwindows = $('.edit').length;
                 if (counteditwindows >= 1) {
-                var e = 0;
-                    var i=0;
+                    var e = 0, i = 0;
                     for (e; counteditwindows >= e; e++) {
                         if ($('.editid').eq(e).val() === bazamarkerow.id.toString()) {
-                         ++i;
+                            ++i;
                         }
-                    if(i===0){
-                        edit(bazamarkerow);
-                    }}
+                        if (i === 0) {
+                            edit(bazamarkerow);
+                        }
+                    }
                 } else {
                     {
                         bazamarkerow.editid = editid;
@@ -120,7 +121,8 @@ function init() {
     };
 
     function toggleGroup(type) {
-        for (var i = 0; i < beachMarker[type].length; i++) {
+        var markersInArray=beachMarker[type].length;
+        for (var i = 0; i < markersInArray; i++) {
             var marker = beachMarker[type][i];
             if (!marker.getVisible()) {
                 marker.setVisible(true);
@@ -130,13 +132,15 @@ function init() {
         }
     }
 
-    function visableAll() {
-        for (var i = 1; i < 10; i++) {
+    function visableOnOf(visable) {
+        for (var i = 1; i <= 10; i++) {
             var jd = beachMarker[i].length;
             for (var j = 0; j < jd; j++) {
                 var marker = beachMarker[i][j];
-                if (!marker.getVisible()) {
+                if(visable===0){
                     marker.setVisible(true);
+                }else{
+                    marker.setVisible(false);
                 }
             }
         }
@@ -160,13 +164,32 @@ function init() {
             top: 50,
             left: 50
         });
-        visableAll();
-    });
+        visableOnOf(0);
+        if(typeof markerGoPoint !== 'undefined'){
+            markerGoPoint.setMap(null);
+        }
 
+    });
+      $('body').on('click', '.go-point', function (e) {
+          visableOnOf(1);
+         var goPoint=this.getAttribute("href").split(',');
+          var goGPS = new google.maps.LatLng(goPoint[0],goPoint[1]);
+           var lineSymbol = {
+    path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+  };
+           markerGoPoint = new google.maps.Marker({
+    position: goGPS,
+    map: theMap,
+    title: goPoint[2]
+  });
+          theMap.setCenter(goGPS);
+          $(window).colorbox.close();
+          e.preventDefault();
+        });
     function sendajax(formdata, method) {
         if (arguments[2] !== undefined)
             var agr = arguments[2];
-          $.ajax({
+        $.ajax({
             type: method,
             url: 'markers',
             contentType: 'aplication/json',
@@ -178,13 +201,14 @@ function init() {
                     $('.globalmesage').addClass('alert-success').append('Bomba usunąłem marker ale już go nie odzyskasz :D').fadeIn();
                 if (method === "PATCH")
                     $('.globalmesage').addClass('alert-success').append('exh znów coś chcesz? <br> No nic musze to zrobić w końcu jestem programaem gotowe markery edytowane').fadeIn();
-                  if (agr !== undefined) {
+                if (agr !== undefined) {
                     deletemarker(agr);
                     lastid(lastmarkerid);
                 } else {
-                     if(method!=="PATCH")
-                   { deletemarker("all");
-                    lastid(lastmarkerid);}
+                    if (method !== "PATCH") {
+                        deletemarker("all");
+                        lastid(lastmarkerid);
+                    }
                 }
             }
         }).fail(function (data) {
@@ -207,55 +231,56 @@ function init() {
         });
     }
 
-    function restoreerror($form,$isEdit) {
+    function restoreerror($form, $isEdit) {
         var iloscokien = $('.panelholding').length - 1;
         $('.panelholding:last').attr('id', iloscokien);
-        if($isEdit==="1")
- {        $form.find('.deltable').val('');
+        if ($isEdit === "1") {
+            $form.find('.deltable').val('');
             $form.find('input[type="checkbox"]').prop('checked', false);
             $form.find('.repair').val('0');
-        $form.find('.alert-danger').hide();
-        $form.find('.alert-danger').empty();
-        $form.find('.alert-danger').attr('class', 'error' + iloscokien + ' alert alert-danger');}
+            $form.find('.alert-danger').hide();
+            $form.find('.alert-danger').empty();
+            $form.find('.alert-danger').attr('class', 'error' + iloscokien + ' alert alert-danger');
+        }
     }
 
     function edit($marker) {
-if($('.latitude').val()==="")
-    {$('.panelholding').removeClass('addnewmarker');
-     $('.panel-heading').addClass('edit').html($marker.title + panelname);
-    $('.panel-body').find('.btn-group').append('<button type="button" data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
-    $('.panel-body').find('.form-group').append('<input class="form-control editid" name="editid"   type="hidden" >');
-                $('.panel-body').find('.title').val($marker.title);
-        $('.panel-body').find('.addres').val($marker.addres);
-        $('.panel-body').find('.opis').val($marker.opis);
-        $('.panel-body').find('.editid').val($marker.id);
-        $('.panel-body').find('.send').removeClass('send').addClass('editsend');
-        $('.panel-body').find('.type').val($marker.type);
-        $('.panel-body').find('.repair').val($marker.repair);
-        $('.panel-body').find('.latitude').val($marker.position.lat());
-        $('.panel-body').find('.longitude').val($marker.position.lng());
+        if ($('.latitude').val() === "") {
+            $('.panelholding').removeClass('addnewmarker');
+            $('.panel-heading').addClass('edit').html($marker.title + panelname);
+            $('.panel-body').find('.btn-group').append('<button type="button" data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
+            $('.panel-body').find('.form-group').append('<input class="form-control editid" name="editid"   type="hidden" >');
+            $('.panel-body').find('.title').val($marker.title);
+            $('.panel-body').find('.addres').val($marker.addres);
+            $('.panel-body').find('.opis').val($marker.opis);
+            $('.panel-body').find('.editid').val($marker.id);
+            $('.panel-body').find('.send').removeClass('send').addClass('editsend');
+            $('.panel-body').find('.type').val($marker.type);
+            $('.panel-body').find('.repair').val($marker.repair);
+            $('.panel-body').find('.latitude').val($marker.position.lat());
+            $('.panel-body').find('.longitude').val($marker.position.lng());
 
-    }else
-{        var editmenu = $('.panelholding:first').clone();
- if(editmenu.hasClass('addnewmarker')){
-             editmenu.find('.btn-group').append('<button type="button" data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
-        editmenu.find('.form-group').append('<input class="form-control editid" name="editid"   type="hidden" >');
-     editmenu.removeClass('addnewmarker');
- }
+        } else {
+            var editmenu = $('.panelholding:first').clone();
+            if (editmenu.hasClass('addnewmarker')) {
+                editmenu.find('.btn-group').append('<button type="button" data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
+                editmenu.find('.form-group').append('<input class="form-control editid" name="editid"   type="hidden" >');
+                editmenu.removeClass('addnewmarker');
+            }
 
-        editmenu.find('.panel-heading').addClass('edit').html($marker.title + panelname);
-
-        editmenu.find('.title').val($marker.title);
-        editmenu.find('.addres').val($marker.addres);
-        editmenu.find('.opis').val($marker.opis);
-        editmenu.find('.editid').val($marker.id);
-        editmenu.find('.send').removeClass('send').addClass('editsend');
-        editmenu.find('.type').val($marker.type);
-        editmenu.find('.repair').val($marker.repair);
-        editmenu.find('.latitude').val($marker.position.lat());
-        editmenu.find('.longitude').val($marker.position.lng());
-        $('.all').before(editmenu);
-        restoreerror(editmenu,0);}
+            editmenu.find('.panel-heading').addClass('edit').html($marker.title + panelname);
+            editmenu.find('.title').val($marker.title);
+            editmenu.find('.addres').val($marker.addres);
+            editmenu.find('.opis').val($marker.opis);
+            editmenu.find('.editid').val($marker.id);
+            editmenu.find('.send').removeClass('send').addClass('editsend');
+            editmenu.find('.type').val($marker.type);
+            editmenu.find('.repair').val($marker.repair);
+            editmenu.find('.latitude').val($marker.position.lat());
+            editmenu.find('.longitude').val($marker.position.lng());
+            $('.all').before(editmenu);
+            restoreerror(editmenu, 0);
+        }
         $('body').on('click', '.destroy', function (e) {
             e.preventDefault();
             var $markerid = $(this).closest('.panel-body').find('.editid').val();
@@ -302,13 +327,13 @@ if($('.latitude').val()==="")
     }
 
     function removevalue() {
-        $('.panel-heading').eq(0).html('marker' + panelname);
-        $('.deltable').val('');
-        $('input[type="checkbox"]').prop('checked', false);
-        $('.repair').val(0);
-        $('.type').val(null);
-    }
-//TODO: look up to this fuction not sure if work  correctly
+            $('.panel-heading').eq(0).html('marker' + panelname);
+            $('.deltable').val('');
+            $('input[type="checkbox"]').prop('checked', false);
+            $('.repair').val(0);
+            $('.type').val(null);
+        }
+        //TODO: look up to this fuction not sure if work  correctly
     function deletemarker(index) {
         var formclose = $('.panelholding'),
             iloscpaneli = formclose.length;
@@ -339,9 +364,10 @@ if($('.latitude').val()==="")
         }
         $(index).fadeOut();
         formclose[index].remove();
-        if (formclose.eq(index).hasClass('addnewmarker'))
-          {  markersadd[index].setMap(null);
-        markersadd.splice(index, 1);}
+        if (formclose.eq(index).hasClass('addnewmarker')) {
+            markersadd[index].setMap(null);
+            markersadd.splice(index, 1);
+        }
         var e = index,
             panelclose = $('.panelholding'),
             countpanels = panelclose.length;
@@ -355,9 +381,9 @@ if($('.latitude').val()==="")
         var iloscmarkerow = markersadd.length,
             iloscokienmarkrów = $('.addnewmarker').length,
             iloscokien = $('.panelholding').length,
-            markeraddmenu=$('.panelholding:first').clone(),
+            markeraddmenu = $('.panelholding:first').clone(),
             marker = new google.maps.Marker({
-                id: iloscokien-1,
+                id: iloscokien - 1,
                 position: location,
                 label: labels[labelIndex++ % labels.length],
                 map: map,
@@ -375,20 +401,21 @@ if($('.latitude').val()==="")
 
 
         if (iloscokienmarkrów >= 0) {
-            if(markeraddmenu.find('.panel-heading:first').hasClass('edit')){
+            if (markeraddmenu.find('.panel-heading:first').hasClass('edit')) {
                 markeraddmenu.addClass('addnewmarker');
                 markeraddmenu.find('.edit').removeClass('edit');
                 markeraddmenu.find('.destroy').remove();
-                 markeraddmenu.find('.editsend').attr('class','btn btn-sm btn-default clickable send');
-                           markeraddmenu.find('.panel-heading').html('marker' + panelname);
+                markeraddmenu.find('.editsend').attr('class', 'btn btn-sm btn-default clickable send');
+                markeraddmenu.find('.panel-heading').html('marker' + panelname);
                 $('.editid').remove();
             }
-            if(iloscmarkerow>0||$('.edit').length===1)
-         {      $('.all').before(markeraddmenu);
-                 restoreerror(markeraddmenu,1);}
-
+            if (iloscmarkerow > 0 || $('.edit').length === 1) {
+                $('.all').before(markeraddmenu);
+                restoreerror(markeraddmenu, 1);
             }
-        getgeo(location, 0,  $('.panelholding').length-1);
+
+        }
+        getgeo(location, 0, $('.panelholding').length - 1);
 
 
     }
@@ -430,25 +457,25 @@ if($('.latitude').val()==="")
                     $(this).html('');
                 });
                 $('.globalmesage').removeClass('alert-success, alert-danger');
-        
+
                 var sendata = JSON.stringify(formallcalue.serializeObject());
                 sendajax(sendata, 'post');
-                var countofedit=$('.edit').length ;
-                        if (countofedit> 0) {
-                    var datafromedit=$('.edit').next();
+                var countofedit = $('.edit').length;
+                if (countofedit > 0) {
+                    var datafromedit = $('.edit').next();
                     var datatojson = JSON.stringify(datafromedit.serializeObject());
-                    sendajax(datatojson, 'PATCH',formcloseid);
+                    sendajax(datatojson, 'PATCH', formcloseid);
 
                 }
             } else if ($(this).hasClass('editsend')) {
                 var $markerid = $(this).closest('.panel-body').find('.editid').val();
                 var $panel = $(this).closest('.panelholding');
-                var dataedit= JSON.stringify($panel.serializeObject());
+                var dataedit = JSON.stringify($panel.serializeObject());
 
                 sendajax(dataedit, 'PATCH');
             }
         });
-        $('body').on('change', 'input[type="checkbox"]', function () {
+        $('body').on('change', '.form-checkbox', function () {
             $(this).val(this.checked ? 1 : 0);
         });
         $.fn.serializeObject = function () {
