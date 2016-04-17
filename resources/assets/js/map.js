@@ -1,3 +1,4 @@
+/*global $,google */
 function init() {
     'use strict';
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -28,16 +29,19 @@ function init() {
         },
         markersadd = [],
         lastmarkerid = null,
-        panelname = '<span class="pull-right cancel clickable"><i class="fa fa-times"></i></span>',
+        panelname =
+'<span class="pull-right cancel clickable"> <i class="fa fa-times"></i></span>',
         markerGoPoint;
 
     function lastid(lid) {
         var i = 0,
-            opis, repair, pozycja, markertitle, markerid, type, image, typ, userid, markerimage, addres, bazamarkerow;
-        $.get('lastid/' + lastmarkerid, function(data, status) {
+            opis, repair, pozycja, markertitle, markerid, type, image, typ,
+            userid, markerimage, addres, bazamarkerow;
+        $.get('lastid/' + lid, function(data) {
             var datl = data.length;
             for (i; i < datl; i++) {
-                pozycja = new google.maps.LatLng(data[i].latitude, data[i].longitude);
+                pozycja = new google.maps.LatLng(data[i].latitude,
+                                                 data[i].longitude);
                 markertitle = data[i].title;
                 markerid = data[i].id;
                 type = data[i].type;
@@ -78,25 +82,28 @@ function init() {
     lastid(lastmarkerid);
     var bindInfoWindow = function(bazamarkerow, theMap) {
         google.maps.event.addListener(bazamarkerow, 'click', function() {
-            var markercontent = '<h4 style="margin:2px ">' + bazamarkerow.title + '</h4><p style="margin:0px">' + bazamarkerow.opis + '</p>';
+            var markercontent = '<h4 style="margin:2px ">' +
+            bazamarkerow.title + '</h4><p style="margin:0px">' +
+            bazamarkerow.opis + '</p>';
             if (bazamarkerow.image !== undefined) {
-                var markerimage = '<img src="' + bazamarkerow.image + '" alt="' + bazamarkerow.title + '">';
+                var markerimage = '<img src="' +
+                    bazamarkerow.image + '" alt="' +
+                bazamarkerow.title + '">';
                 markercontent = markercontent + markerimage;
             }
             var infowindow = new google.maps.InfoWindow({
                 content: markercontent
             });
             infowindow.open(theMap, bazamarkerow);
-            if ($('#roleid').val() === '2' || $('#userid').val() === bazamarkerow.userid)
-
-            {
+            if ($('#roleid').val() === '2' ||
+                $('#userid').val() === bazamarkerow.userid) {
                 var editid = $('.panelholding').length;
                 bazamarkerow.setDraggable(true);
                 var counteditwindows = $('.edit').length;
                 if (counteditwindows >= 1) {
                     var e = 0, i = 0;
                     for (e; counteditwindows >= e; e++) {
-                        if ($('.editid').eq(e).val() === bazamarkerow.id.toString()) {
+                if ($('.editid').eq(e).val() === bazamarkerow.id.toString()) {
                             ++i;
                         }
                         if (i === 0) {
@@ -114,7 +121,8 @@ function init() {
             }
 
         });
-        google.maps.event.addListener(bazamarkerow, 'dragend', function (event) {
+        google.maps.event.addListener(bazamarkerow, 'dragend', function (event)
+                                      {
             var editid = this.editid;
             getgeo(event.latLng, 0, editid);
         });
@@ -174,9 +182,7 @@ function init() {
           visableOnOf(1);
          var goPoint=this.getAttribute("href").split(',');
           var goGPS = new google.maps.LatLng(goPoint[0],goPoint[1]);
-           var lineSymbol = {
-    path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
-  };
+
            markerGoPoint = new google.maps.Marker({
     position: goGPS,
     map: theMap,
@@ -196,11 +202,17 @@ function init() {
             data: formdata,
             success: function (data) {
                 if (method === "POST")
-                    $('.globalmesage').addClass('alert-success').append('melduje wykonanie zadania markery zostały dodane').fadeIn();
+                    $('.globalmesage').addClass('alert-success').
+                    append('melduje wykonanie zadania markery zostały dodane')
+                        .fadeIn();
                 if (method === "DELETE")
-                    $('.globalmesage').addClass('alert-success').append('Bomba usunąłem marker ale już go nie odzyskasz :D').fadeIn();
+                    $('.globalmesage').addClass('alert-success').
+                    append('Bomba usunąłem marker ale już go nie odzyskasz :D')
+                        .fadeIn();
                 if (method === "PATCH")
-                    $('.globalmesage').addClass('alert-success').append('exh znów coś chcesz? <br> No nic musze to zrobić w końcu jestem programaem gotowe markery edytowane').fadeIn();
+                    $('.globalmesage').addClass('alert-success').
+                    append('exh znów coś chcesz? <br> No nic musze to zrobić w \
+końcu jestem programaem gotowe markery edytowane').fadeIn();
                 if (agr !== undefined) {
                     deletemarker(agr);
                     lastid(lastmarkerid);
@@ -213,7 +225,9 @@ function init() {
             }
         }).fail(function (data) {
             if (data.status === 500) {
-                $('.globalmesage').addClass('alert-danger').html('coś poszło nie tak nasze minionki juz pracują nad rozwizaniem problemu :)').fadeIn();
+                $('.globalmesage').addClass('alert-danger').
+                html('coś poszło nie tak nasze minionki juz pracują nad \
+rozwizaniem problemu :)').fadeIn();
                 return;
             }
             var errors = data.responseJSON;
@@ -240,7 +254,8 @@ function init() {
             $form.find('.repair').val('0');
             $form.find('.alert-danger').hide();
             $form.find('.alert-danger').empty();
-            $form.find('.alert-danger').attr('class', 'error' + iloscokien + ' alert alert-danger');
+            $form.find('.alert-danger').attr('class', 'error' + iloscokien +
+                                             ' alert alert-danger');
         }
     }
 
@@ -248,13 +263,18 @@ function init() {
         if ($('.latitude').val() === "") {
             $('.panelholding').removeClass('addnewmarker');
             $('.panel-heading').addClass('edit').html($marker.title + panelname);
-            $('.panel-body').find('.btn-group').append('<button type="button" data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
-            $('.panel-body').find('.form-group').append('<input class="form-control editid" name="editid"   type="hidden" >');
+            $('.panel-body').find('.btn-group').
+            append('<button type="button" data-dismiss="modal" \
+class="btn btn-sm btn-default destroy" >usuń</button>');
+            $('.panel-body').find('.form-group').
+            append('<input class="form-control editid" name="editid"  \
+type="hidden" >');
             $('.panel-body').find('.title').val($marker.title);
             $('.panel-body').find('.addres').val($marker.addres);
             $('.panel-body').find('.opis').val($marker.opis);
             $('.panel-body').find('.editid').val($marker.id);
-            $('.panel-body').find('.send').removeClass('send').addClass('editsend');
+            $('.panel-body').find('.send').removeClass('send').
+            addClass('editsend');
             $('.panel-body').find('.type').val($marker.type);
             $('.panel-body').find('.repair').val($marker.repair);
             $('.panel-body').find('.latitude').val($marker.position.lat());
@@ -263,12 +283,16 @@ function init() {
         } else {
             var editmenu = $('.panelholding:first').clone();
             if (editmenu.hasClass('addnewmarker')) {
-                editmenu.find('.btn-group').append('<button type="button" data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
-                editmenu.find('.form-group').append('<input class="form-control editid" name="editid"   type="hidden" >');
+                editmenu.find('.btn-group').append('<button type="button" \
+data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
+                editmenu.find('.form-group').
+                append('<input class="form-control editid" name="editid"  \
+type="hidden" >');
                 editmenu.removeClass('addnewmarker');
             }
 
-            editmenu.find('.panel-heading').addClass('edit').html($marker.title + panelname);
+            editmenu.find('.panel-heading').addClass('edit')
+            .html($marker.title + panelname);
             editmenu.find('.title').val($marker.title);
             editmenu.find('.addres').val($marker.addres);
             editmenu.find('.opis').val($marker.opis);
@@ -284,13 +308,14 @@ function init() {
         $('body').on('click', '.destroy', function (e) {
             e.preventDefault();
             var $markerid = $(this).closest('.panel-body').find('.editid').val();
-            var $panel = $(this).closest('.panelholding');
+
             $('.modal').modal()
                 .one('click', '#destroy', function (e) {
-                    sendajax($markerid, 'DELETE');
-                    $('.globalmesage').addClass('alert-success').html('Bomba usunąłem marker ale już go nie odzyskasz :D').fadeIn();
-                    $marker.setMap(null);
-                    $('.close').click();
+             sendajax($markerid, 'DELETE');
+             $('.globalmesage').addClass('alert-success')
+            .html('Bomba usunąłem marker ale już go nie odzyskasz :D').fadeIn();
+            $marker.setMap(null);
+            $('.close').click();
 
                 });
         });
@@ -379,7 +404,7 @@ function init() {
 
     function addMarker(location, map) {
         var iloscmarkerow = markersadd.length,
-            iloscokienmarkrów = $('.addnewmarker').length,
+            countMarker = $('.addnewmarker').length,
             iloscokien = $('.panelholding').length,
             markeraddmenu = $('.panelholding:first').clone(),
             marker = new google.maps.Marker({
@@ -400,12 +425,13 @@ function init() {
         });
 
 
-        if (iloscokienmarkrów >= 0) {
+        if (countMarker >= 0) {
             if (markeraddmenu.find('.panel-heading:first').hasClass('edit')) {
                 markeraddmenu.addClass('addnewmarker');
                 markeraddmenu.find('.edit').removeClass('edit');
                 markeraddmenu.find('.destroy').remove();
-                markeraddmenu.find('.editsend').attr('class', 'btn btn-sm btn-default clickable send');
+                markeraddmenu.find('.editsend')
+                    .attr('class', 'btn btn-sm btn-default clickable send');
                 markeraddmenu.find('.panel-heading').html('marker' + panelname);
                 $('.editid').remove();
             }
@@ -462,13 +488,12 @@ function init() {
                 sendajax(sendata, 'post');
                 var countofedit = $('.edit').length;
                 if (countofedit > 0) {
-                    var datafromedit = $('.edit').next();
-                    var datatojson = JSON.stringify(datafromedit.serializeObject());
+                var datafromedit = $('.edit').next();
+                var datatojson = JSON.stringify(datafromedit.serializeObject());
                     sendajax(datatojson, 'PATCH', formcloseid);
 
                 }
             } else if ($(this).hasClass('editsend')) {
-                var $markerid = $(this).closest('.panel-body').find('.editid').val();
                 var $panel = $(this).closest('.panelholding');
                 var dataedit = JSON.stringify($panel.serializeObject());
 
@@ -480,18 +505,20 @@ function init() {
         });
         $.fn.serializeObject = function () {
             var o = {};
-            var rules = 'input[type="hidden"], input[type="text"], input[type="password"]';
-            rules += ',input[type="checkbox"], input[type="radio"]:checked';
-            rules += ',select, textarea, input[type="file"] ';
+            var rules = 'input[type="hidden"], input[type="text"], \
+input[type="password"], input[type="checkbox"], input[type="radio"]:checked \
+    ,select, textarea, input[type="file"] ';
             $(this).find(rules).each(function () {
                 if ($(this).attr('type') == 'hidden') {
                     var $parent = $(this).parent();
-                    var $chb = $parent.find('input[type="checkbox"][name="' + this.name.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '"]');
+                    var $chb = $parent.find('input[type="checkbox"][name="' +
+                this.name.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '"]');
                     if ($chb !== null) {
                         if ($chb.prop('checked')) return;
                     }
                 }
-                if (this.name === null || this.name === undefined || this.name === '')
+                if (this.name === null || this.name === undefined ||
+                    this.name === '')
                     return;
                 var elemValue = null;
                 if ($(this).is('select'))
