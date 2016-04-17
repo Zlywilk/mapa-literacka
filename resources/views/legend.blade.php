@@ -4,6 +4,7 @@
 <script>$('.ajax').colorbox();
 
 </script> 
+<div class="container-fluid">
 @foreach(array_chunk($kategorie->all(), 3) as $row)
 <div class="row center-block">
 @foreach($row as $item)
@@ -11,5 +12,5 @@
     @endforeach
 </div>
 @endforeach
-
+</div>
 @endsection

@@ -4,7 +4,7 @@
  <script src="{{ elixir('js/all.js') }}"></script>
 @endsection
       @section('content') 
-
+      @if(Auth::check())
 <div class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -24,11 +24,9 @@
 </div><!-- /.modal -->
     <div id="toggle" class="glyphicon glyphicon-menu-hamburger"></div>
     <div id="sidebar-wrapper" class="toggled hide">
-        @if(Auth::guest())
-        <p>widzę że jesteś człowiekiem ciekawym świata <br><a href="{{url('/login')}}"> zaloguj się  aby móc dodawać punkty </a> </p>
+
         
-        @else
-        
+
         <input class="form-control" id="city" type="text" placeholder="wpisz nazwe miasta">
     
     <button class="btn btn-sm btn-default city">Idź do UL.</button>
@@ -67,7 +65,7 @@
 
  <div class="checkbox"> 
      <label>
-      <input name="repair" class="repair"  type="checkbox" value="0"> archwalne
+      <input name="repair" class="repair form-checkbox"  type="checkbox" value="0"> archwalne
     </label>
        
   </div>

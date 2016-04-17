@@ -7,6 +7,8 @@
           @if ($marker->image !== NULL)
     <img src="{{$marker->image}}" alt="{{$marker->title}}"><br>
 @endif
-                 <a class="myLink" href="{{$marker->latitude}},{{$marker->longitude}}">pokaż punkt na mapie</a>
-</div>
+     @if ($marker->longitude !== NULL)
+                 <a class="go-point" href="{{$marker->latitude}},{{$marker->longitude}},{{$marker->title}}">pokaż punkt na mapie</a>
+    @endif
+
 </div>
