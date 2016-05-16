@@ -1,7 +1,7 @@
 
 @extends('layouts.master')  
 @section('js')
- <script src="{{ elixir('js/all.js') }}"></script>
+ <script src="{{ elixir('js/all.js') }}" async defer></script>
 @endsection
       @section('content') 
       @if(Auth::check())
