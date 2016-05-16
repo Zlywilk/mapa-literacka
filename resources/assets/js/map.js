@@ -1,5 +1,5 @@
 /*global $,google */
-function init() {
+function initMap() {
     'use strict';
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
         labelIndex = 0,
@@ -281,29 +281,29 @@ type="hidden" >');
             $('.panel-body').find('.longitude').val($marker.position.lng());
 
         } else {
-            var editmenu = $('.panelholding:first').clone();
-            if (editmenu.hasClass('addnewmarker')) {
-                editmenu.find('.btn-group').append('<button type="button" \
+            var editMenu = $('.panelholding:first').clone();
+            if (editMenu.hasClass('addnewmarker')) {
+                editMenu.find('.btn-group').append('<button type="button" \
 data-dismiss="modal" class="btn btn-sm btn-default destroy" >usuń</button>');
-                editmenu.find('.form-group').
+                editMenu.find('.form-group').
                 append('<input class="form-control editid" name="editid"  \
 type="hidden" >');
-                editmenu.removeClass('addnewmarker');
+                editMenu.removeClass('addnewmarker');
             }
 
-            editmenu.find('.panel-heading').addClass('edit')
+            editMenu.find('.panel-heading').addClass('edit')
             .html($marker.title + panelname);
-            editmenu.find('.title').val($marker.title);
-            editmenu.find('.addres').val($marker.addres);
-            editmenu.find('.opis').val($marker.opis);
-            editmenu.find('.editid').val($marker.id);
-            editmenu.find('.send').removeClass('send').addClass('editsend');
-            editmenu.find('.type').val($marker.type);
-            editmenu.find('.repair').val($marker.repair);
-            editmenu.find('.latitude').val($marker.position.lat());
-            editmenu.find('.longitude').val($marker.position.lng());
-            $('.all').before(editmenu);
-            restoreerror(editmenu, 0);
+            editMenu.find('.title').val($marker.title);
+            editMenu.find('.addres').val($marker.addres);
+            editMenu.find('.opis').val($marker.opis);
+            editMenu.find('.editid').val($marker.id);
+            editMenu.find('.send').removeClass('send').addClass('editsend');
+            editMenu.find('.type').val($marker.type);
+            editMenu.find('.repair').val($marker.repair);
+            editMenu.find('.latitude').val($marker.position.lat());
+            editMenu.find('.longitude').val($marker.position.lng());
+            $('.all').before(editMenu);
+            restoreerror(editMenu, 0);
         }
         $('body').on('click', '.destroy', function (e) {
             e.preventDefault();
@@ -411,7 +411,7 @@ type="hidden" >');
                 id: iloscokien - 1,
                 position: location,
                 label: labels[labelIndex++ % labels.length],
-                map: map,
+                map: theMap,
                 draggable: true
             });
 
@@ -467,7 +467,8 @@ type="hidden" >');
         $('body').on('click', '.clickable', function (e) {
             var formclose = $(this).closest('.panelholding'),
                 formcloseid = formclose.attr('id'),
-                formallcalue = $('.addnewmarker');
+                formallcalue = $('.addnewmarker'),
+                countofedit;
             e.preventDefault();
             if ($(this).hasClass('cancel')) {
                 deletemarker(formcloseid);
@@ -476,7 +477,9 @@ type="hidden" >');
             } else if ($(this).hasClass('send')) {
 
                 formclose.find('.alert-danger').empty();
-                var data = JSON.stringify(formclose.serializeObject());
+              var fd=new FormData();
+              fd.append('image',$('input:file'));
+console.log(fd.get('image'));
                 sendajax(data, 'post', formcloseid);
             } else if ($(this).hasClass('sendall')) {
                 $('.alert').fadeOut('fast', function () {
@@ -485,8 +488,8 @@ type="hidden" >');
                 $('.globalmesage').removeClass('alert-success, alert-danger');
 
                 var sendata = JSON.stringify(formallcalue.serializeObject());
-                sendajax(sendata, 'post');
-                var countofedit = $('.edit').length;
+                sendajax(sendata, 'post'),
+               countofedit = $('.edit').length;
                 if (countofedit > 0) {
                 var datafromedit = $('.edit').next();
                 var datatojson = JSON.stringify(datafromedit.serializeObject());
@@ -507,7 +510,7 @@ type="hidden" >');
             var o = {};
             var rules = 'input[type="hidden"], input[type="text"], \
 input[type="password"], input[type="checkbox"], input[type="radio"]:checked \
-    ,select, textarea, input[type="file"] ';
+    ,select, textarea';
             $(this).find(rules).each(function () {
                 if ($(this).attr('type') == 'hidden') {
                     var $parent = $(this).parent();
@@ -538,4 +541,12 @@ input[type="password"], input[type="checkbox"], input[type="radio"]:checked \
     }
     theMap.controls[google.maps.ControlPosition.TOP_LEFT].push();
 }
-google.maps.event.addDomListener(window, 'load', init);
+        function loadScript()
+{
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyCYqomDlEk2ZSZ0KeV8LwWdhHHzlJNGhOA&callback=initMap";
+  document.body.appendChild(script);
+}
+
+window.onload = loadScript;
