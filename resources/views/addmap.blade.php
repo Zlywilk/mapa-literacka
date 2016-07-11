@@ -96,5 +96,5 @@
       </div>
 
     <div id="map" ></div>
-<a id="legend" class='ajax' href="{{url('/legend')}}" ><button  class="btn btn-default" title="legenda i opcje">legenda i opcje</button></a>
+<a id="legend" class='ajax cboxElement' href="{{url('/legend')}}" ><button  class="btn btn-default" title="legenda i opcje">legenda i opcje</button></a>
 @endsection
