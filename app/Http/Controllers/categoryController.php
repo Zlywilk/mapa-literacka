@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\kategorie;
+use App\Categories;
 class categoryController extends Controller
 {
     /**
@@ -15,8 +15,8 @@ class categoryController extends Controller
      */
     public function index()
     {
-     $kategorie=kategorie::all();
-    return view('legend')->with('kategorie',$kategorie);
+     $Categories=Categories::all();
+    return view('legend')->with('Categories',$Categories);
     }
 
     /**
@@ -50,7 +50,7 @@ class categoryController extends Controller
     {
             {
              $result = markers
-    ::join('kategorie', 'kategorie.id', '=', 'markers.type')
+    ::join('Categories', 'Categories.id', '=', 'markers.type')
     ->select('markers.id','title','latitude','longitude','gfx','type')
     ->getQuery() // Optional: downgrade to non-eloquent builder so we don't build invalid User objects.
     ->get();

@@ -5,8 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 
-class kategorie extends Model
+class Categories extends Model
 {
-    protected $table = "kategorie";
+    protected $table = "Categories";
      protected $dateFormat = 'U';
 }

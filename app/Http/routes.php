@@ -36,7 +36,7 @@ Route::group(['middleware' => ['web']], function () {
      Route::delete('markers', 'MakerController@destroy');
      Route::patch('markers', 'MakerController@update');
     Route::get('/', function () {
-$kategorie=App\kategorie::all();
-    return view('addmap')->with('kategorie',$kategorie);
+$Categories=App\Categories::all();
+    return view('addmap')->with('Categories',$Categories);
 });
 });

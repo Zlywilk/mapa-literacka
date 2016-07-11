@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests\StoremarkersPostRequest;
 use App\markers;
-use App\kategorie;
+use App\Categories;
 use Carbon\Carbon;
 
 
@@ -27,8 +27,8 @@ class MakerController extends Controller
             
     $lastmarker=markers::all()->last()->id;
         if($lastid!=$lastmarker){
-           $result = markers::join('kategorie', 'kategorie.id', '=', 'markers.type')
-    ->select('markers.id' ,'markers.opis','addres','title','latitude','longitude','gfx','type', 'repair','user_id')
+           $result = markers::join('Categories', 'Categories.id', '=', 'markers.type')
+    ->select('markers.id' ,'markers.description','addres','title','latitude','longitude','gfx','type', 'repair','user_id')
                   ->where('markers.id', '>', $lastid)
     ->getQuery() // Optional: downgrade to non-eloquent builder so we don't build invalid User objects.
     ->get();
