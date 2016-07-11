@@ -18,7 +18,7 @@ class Markers extends Migration
           $table->string('title');
            $table->unsignedInteger('user_id')->nullable();
         $table->string('addres')->nullable();
-            $table->text('opis')->nullable();
+            $table->text('description')->nullable();
        $table->unsignedInteger('type');
        $table->string('image')->nullable();
         $table->float('latitude',10,6)->nullable();
@@ -30,7 +30,7 @@ class Markers extends Migration
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
           Schema::table('markers', function($table) {
        $table->foreign('user_id')->references('id')->on('users');
-        $table->foreign('type')->references('id')->on('kategorie')->onDelete('cascade');
+        $table->foreign('type')->references('id')->on('categories')->onDelete('cascade');
    });
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
