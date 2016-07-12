@@ -104,12 +104,12 @@ function initMap() {
     }
   }
 
-  function visableOnOf(visable) {
+  function visibleOnOf(visibleValue) {
     for (var i = 1; i <= 10; i++) {
       var jd = beachMarker[i].length;
       for (var j = 0; j < jd; j++) {
         var marker = beachMarker[i][j];
-        if (visable === 0) {
+        if (visibleValue === 0) {
           marker.setVisible(true);
         }else {
           marker.setVisible(false);
@@ -124,7 +124,7 @@ function initMap() {
   theMap.controls[google.maps.ControlPosition.TOP_CENTER].push(idl);
 }
 $('body').on('click', '.go-point', function(e) {
-  visableOnOf(1);
+  visibleOnOf(1);
   var goPoint = this.getAttribute('href').split(',');
   var goGPS = new google.maps.LatLng(goPoint[0], goPoint[1]);
 
