@@ -1,7 +1,6 @@
-
 <div class="container-fluid">
         <h4 style="margin:0px">{{$marker->title}}</h4>
-  @if ($marker->opis !== '')
+  @if ($marker->description !== '')
         <p style="margin:0px">{{$marker->description}}</p>
      @endif
           @if ($marker->image !== NULL)
