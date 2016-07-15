@@ -13,7 +13,7 @@ class markers extends Model
     'title',
     'user_id',
     'addres',
-    'opis',
+    'description',
     'type',
         'file',
     'latitude',

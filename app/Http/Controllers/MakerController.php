@@ -59,7 +59,7 @@ class MakerController extends Controller
        ([
                'title' => $input ['title'],
        'addres' =>$input ['addres'], 
-       'opis' =>$input['opis'], 
+       'description' =>$input['opis'],
        'type'=>$input ['type'], 
        'image'=>$input['image'],
        'latitude' =>$input ['latitude'], 
@@ -78,7 +78,7 @@ class MakerController extends Controller
        ([
                'title' => $input ['title'][$i],
        'addres' =>$input ['addres'][$i], 
-       'opis' =>$input['opis'][$i], 
+       'description' =>$input['opis'][$i],
        'type'=>$input ['type'][$i], 
        'image'=>$input['image'][$i],
        'latitude' =>$input ['latitude'][$i], 
@@ -139,7 +139,7 @@ class MakerController extends Controller
 markers::where('id', $editid)->update(array(
     'title' => $input ['title'],
        'addres' =>$input ['addres'], 
-       'opis' =>$input ['opis'], 
+       'description' =>$input ['opis'],
        'type'=>$input ['type'], 
        'image'=>$input ['image'],
        'latitude' =>$input ['latitude'], 
@@ -153,7 +153,7 @@ markers::where('id', $editid)->update(array(
 markers::where('id', $editid)->update(array(
     'title' => $input ['title'][$i],
        'addres' =>$input ['addres'][$i], 
-       'opis' =>$input ['opis'][$i], 
+       'description' =>$input ['opis'][$i],
        'type'=>$input ['type'][$i], 
        'image'=>$input ['image'][$i],
        'latitude' =>$input ['latitude'][$i], 
