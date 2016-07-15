@@ -23,7 +23,7 @@ function initMap() {
             8: [],
             9: [],
             10: []
-      },lastmarkerid;
+      },lastmarkerid,markerGoPoint;
 
   function lastid(lid) {
     var i = 0,
@@ -86,6 +86,7 @@ function initMap() {
       var infowindow = new google.maps.InfoWindow({
         content: MarkerContent
       });
+
       infowindow.open(theMap, MarkeFromDb);
     });
 
@@ -104,7 +105,7 @@ function initMap() {
     }
   }
 
-  function visibleOnOf(visibleValue) {
+  function visibleOnOff(visibleValue) {
     for (var i = 1; i <= 10; i++) {
       var jd = beachMarker[i].length;
       for (var j = 0; j < jd; j++) {
@@ -117,14 +118,17 @@ function initMap() {
       }
     }
   }
+
+    $('a.ajax.cboxElement').colorbox();
+
+
   $('body').on('change', '#cboxLoadedContent input', function() {
     toggleGroup(this.value);
   });
   var idl = document.getElementById('legend');
   theMap.controls[google.maps.ControlPosition.TOP_CENTER].push(idl);
-}
-$('body').on('click', '.go-point', function(e) {
-  visibleOnOf(1);
+$('body').on('click', 'a.go-point', function(e) {
+  visibleOnOff(1);
   var goPoint = this.getAttribute('href').split(',');
   var goGPS = new google.maps.LatLng(goPoint[0], goPoint[1]);
 
@@ -137,7 +141,7 @@ $('body').on('click', '.go-point', function(e) {
   $(window).colorbox.close();
   e.preventDefault();
 });
-
+}
 function loadScript()
 {
   var script = document.createElement('script');
