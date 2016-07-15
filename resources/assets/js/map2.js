@@ -23,7 +23,7 @@ function initMap() {
             8: [],
             9: [],
             10: []
-      },lastmarkerid,markerGoPoint;
+      },lastmarkerid,markerGoPoint,infowindow;
 
   function lastid(lid) {
     var i = 0,
@@ -83,7 +83,10 @@ function initMap() {
                 MarkeFromDb.title + '">';
         MarkerContent = MarkerContent + markerimage;
       }
-      var infowindow = new google.maps.InfoWindow({
+         if (infowindow) {
+        infowindow.close();
+    }
+       infowindow = new google.maps.InfoWindow({
         content: MarkerContent
       });
 
